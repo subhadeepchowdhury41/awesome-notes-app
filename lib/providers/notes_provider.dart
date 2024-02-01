@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class NotesNotifier extends StateNotifier<List<Note>> {
   NotesNotifier() : super([]);
 
+  init() async {
+    
+  }
+
   void add(Note note) {
     state = [...state, note];
   }

@@ -19,7 +19,7 @@ class NoteAdapter extends TypeAdapter<Note> {
     return Note(
       id: fields[0] as String?,
       title: fields[1] as String?,
-      color: fields[2] as String?,
+      content: fields[2] as String?,
     );
   }
 
@@ -32,7 +32,7 @@ class NoteAdapter extends TypeAdapter<Note> {
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.color);
+      ..write(obj.content);
   }
 
   @override

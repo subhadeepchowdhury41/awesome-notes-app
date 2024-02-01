@@ -11,16 +11,16 @@ class Note {
   String? title;
 
   @HiveField(2)
-  String? color;
+  String? content;
 
   Note({
     this.id,
     this.title,
-    this.color,
+    this.content,
   });
 
   factory Note.fromMap(Map<String, dynamic> data) {
     return Note(
-        id: data['_id'], title: data['title'], color: data['color']);
+        id: data['_id'], title: data['title'], content: data['content']);
   }
 }
