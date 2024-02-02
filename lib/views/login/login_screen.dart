@@ -10,6 +10,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         children: [
           const SizedBox(height: 20),
           TextFormField(
+            controller: _usernameController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Username',
@@ -28,6 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            controller: _passwordController,
             obscureText: true,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -38,8 +42,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 await ref.read(authProvider.notifier).login(
-                      username: 'admin',
-                      password: 'admin',
+                      username: _usernameController.text,
+                      password: _passwordController.text,
                     );
               },
               child: const Text('Login'),

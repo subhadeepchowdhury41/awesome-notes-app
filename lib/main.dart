@@ -27,7 +27,6 @@ class _NotesAppState extends ConsumerState<NotesApp> {
 
   _appInit() async {
     await Future.delayed(const Duration(seconds: 2));
-
     await ref.read(authProvider.notifier).init();
     await ref.read(notesProvider.notifier).init();
   }

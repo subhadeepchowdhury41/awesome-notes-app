@@ -18,10 +18,24 @@ class AuthNotifier extends ChangeNotifier {
   String? get id => _id;
   Auth? get auth => _auth;
 
+  Future<void> fetchUserId() async {
+    await RestClient.get('auth/me', includeAuthTokens: true).then((res) {
+      if (res?.statusCode == 200) {
+        _id = res?.data['sub'];
+        if (_id == null) {
+          status = AuthStatus.unauthenticated;
+          throw Exception('Invalid user id');
+        }
+        status = AuthStatus.authenticated;
+        notifyListeners();
+      }
+    });
+  }
+
   Future<void> init() async {
     final auth = HiveBoxes.getAuthBox().values.firstOrNull;
     if (auth != null && auth.accessToken != null && auth.refreshToken != null) {
-      status = AuthStatus.authenticated;
+      await fetchUserId();
     } else {
       status = AuthStatus.unauthenticated;
     }
@@ -30,23 +44,35 @@ class AuthNotifier extends ChangeNotifier {
 
   Future<void> login(
       {required String username, required String password}) async {
-    await RestClient.post('auth/sigin', {
+    await RestClient.post('auth/signin', {
       "username": username,
       "password": password,
-    }).then((res) {
-      if (res?.statusCode == 200) {
-        _auth = Auth.fromMap(res?.data);
-        status = AuthStatus.authenticated;
-        notifyListeners();
+    }).then((res) async {
+      if (res?.statusCode == 201) {
+        if (res == null || res.data == null) {
+          throw Exception('Invalid auth tokens');
+        }
+        _auth = Auth.fromMap(res.data);
+        await HiveBoxes.getAuthBox().clear();
+        await HiveBoxes.getAuthBox().put('auth', _auth!);
+        await fetchUserId();
       }
     }).catchError((e) {
       status = AuthStatus.unauthenticated;
       notifyListeners();
     });
-    notifyListeners();
   }
 
-  void logout() {
+  Future<void> logout() async {
+    await RestClient.post('auth/logout', {}, includeAuthTokens: true)
+        .then((res) {
+      if (res?.statusCode == 200) {
+        HiveBoxes.getAuthBox().clear();
+      }
+    }).catchError((e) {
+      status = AuthStatus.unauthenticated;
+      notifyListeners();
+    });
     status = AuthStatus.unauthenticated;
     notifyListeners();
   }
