@@ -8,7 +8,9 @@ import { AppService } from './app.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/nestjs'),
+    MongooseModule.forRoot(
+      'mongodb+srv://sc2002:subha41@cluster0.kggwdqk.mongodb.net/awesome-notes',
+    ),
     UsersModule,
     NoteModule,
     AuthModule,
