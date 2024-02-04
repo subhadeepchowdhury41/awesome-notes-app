@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="demo_frontend"
-        android:name="Awesome Notes"
+        android:label="Awesome Notes"
+        android:name="com.example.demo_frontend"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
