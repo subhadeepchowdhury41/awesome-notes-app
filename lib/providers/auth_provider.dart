@@ -1,6 +1,7 @@
 import 'package:demo_frontend/models/auth_model.dart';
 import 'package:demo_frontend/services/hive_boxes.dart';
 import 'package:demo_frontend/services/rest_client.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,16 +20,51 @@ class AuthNotifier extends ChangeNotifier {
   Auth? get auth => _auth;
 
   Future<void> fetchUserId() async {
-    await RestClient.get('auth/me', includeAuthTokens: true).then((res) {
-      if (res?.statusCode == 200) {
-        _id = res?.data['sub'];
-        if (_id == null) {
-          status = AuthStatus.unauthenticated;
-          throw Exception('Invalid user id');
+    try {
+      await RestClient.get('auth/me', includeAuthTokens: true).then((res) {
+        if (res?.statusCode == 200) {
+          _id = res?.data['sub'];
+          if (_id == null) {
+            status = AuthStatus.unauthenticated;
+            notifyListeners();
+            throw Exception('Invalid user id');
+          } else {
+            status = AuthStatus.authenticated;
+            notifyListeners();
+          }
         }
-        status = AuthStatus.authenticated;
+      });
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        await refreshToken();
+      } else {
+        status = AuthStatus.unauthenticated;
         notifyListeners();
       }
+    }
+  }
+
+  Future<void> refreshToken() async {
+    final refreshToken = HiveBoxes.getAuthBox().values.first.refreshToken;
+    if (refreshToken == null) {
+      status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return;
+    }
+    await RestClient.get('auth/refresh', includeAuthTokens: true, refresh: true)
+        .then((res) async {
+      if (res?.statusCode == 200) {
+        if (res == null || res.data == null) {
+          throw Exception('Invalid auth tokens');
+        }
+        _auth = Auth.fromMap(res.data);
+        await HiveBoxes.getAuthBox().clear();
+        await HiveBoxes.getAuthBox().put('auth', _auth!);
+        await fetchUserId();
+      }
+    }).catchError((e) {
+      status = AuthStatus.unauthenticated;
+      notifyListeners();
     });
   }
 
@@ -60,14 +96,40 @@ class AuthNotifier extends ChangeNotifier {
     }).catchError((e) {
       status = AuthStatus.unauthenticated;
       notifyListeners();
+      throw e;
+    });
+  }
+
+  Future<void> register(
+      {required String username,
+      required String password,
+      required String name}) async {
+    await RestClient.post('auth/signup', {
+      "username": username,
+      "password": password,
+      "name": name
+    }).then((res) async {
+      if (res?.statusCode == 201) {
+        if (res == null || res.data == null) {
+          throw Exception('Invalid auth tokens');
+        }
+        _auth = Auth.fromMap(res.data);
+        await HiveBoxes.getAuthBox().clear();
+        await HiveBoxes.getAuthBox().put('auth', _auth!);
+        await fetchUserId();
+      }
+    }).catchError((e) {
+      status = AuthStatus.unauthenticated;
+      notifyListeners();
+      throw e;
     });
   }
 
   Future<void> logout() async {
-    await RestClient.post('auth/logout', {}, includeAuthTokens: true)
-        .then((res) {
+    await RestClient.get('auth/logout', includeAuthTokens: true).then((res) {
       if (res?.statusCode == 200) {
         HiveBoxes.getAuthBox().clear();
+        HiveBoxes.getNotesBox().clear();
       }
     }).catchError((e) {
       status = AuthStatus.unauthenticated;

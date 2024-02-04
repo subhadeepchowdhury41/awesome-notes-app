@@ -22,4 +22,8 @@ class HiveBoxes {
   static Box<Note> getNotesBox() => Hive.box<Note>(notes);
   // static Box getSettingsBox() => Hive.box(settings);
   static Box<Auth> getAuthBox() => Hive.box<Auth>(auth);
+
+  static closeBoxes() {
+    Hive.close();
+  }
 }
