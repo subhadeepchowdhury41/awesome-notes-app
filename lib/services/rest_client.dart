@@ -4,7 +4,7 @@ import 'package:demo_frontend/services/hive_boxes.dart';
 import 'package:dio/dio.dart';
 
 class RestClient {
-  static const String _baseUrl = 'http://192.168.29.10:3000';
+  static const String _baseUrl = 'https://awesome-notes-n4rt.onrender.com';
   static final _dio = Dio();
 
   static Future<Response?> get(String path,

@@ -46,46 +46,53 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                SizedBox(
-                  height: 50 * _blur,
-                  width: 50 * _blur,
-                  child: const CircleAvatar(
-                    child: Icon(Icons.person, size: 50),
+                Container(
+                  height: 100,
+                  width: 100,
+                  child: CircleAvatar(
+                    radius: 50 * _blur,
+                    child: Icon(Icons.person, size: 50 * _blur),
                   ),
                 ),
                 const SizedBox(height: 20),
-                Column(
-                  children: [
-                    Text(
-                      user!.name!,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w400),
-                    ),
-                    Text(
-                      '@${user.username!}',
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w200,
-                          color: AppConstants.disabledColor),
-                    ),
-                  ],
+                Opacity(
+                  opacity: _blur,
+                  child: Column(
+                    children: [
+                      Text(
+                        user!.name!,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                      ),
+                      Text(
+                        '@${user.username!}',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 40),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.deepPurpleAccent,
-                      foregroundColor: Colors.white),
-                  onPressed: () {
-                    ref.read(authProvider.notifier).logout();
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.logout, size: 17),
-                      SizedBox(width: 10),
-                      Text('Sign Out'),
-                    ],
+                Container(
+                  transform: Matrix4.translationValues(200 * (1 - _blur), 0, 0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: Colors.deepPurpleAccent,
+                        foregroundColor: Colors.white),
+                    onPressed: () {
+                      ref.read(authProvider.notifier).logout();
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.logout, size: 17),
+                        SizedBox(width: 10),
+                        Text('Sign Out'),
+                      ],
+                    ),
                   ),
                 )
               ],
