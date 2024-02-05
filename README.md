@@ -10,9 +10,9 @@ This is a Notes App built using Flutter for the frontend and Nest.js for the bac
 - 🍎🤖 Compatibility with both iOS and Android devices.
 
 ## 🖼️ Screenshots
-![Screenshot 1](/screenshots/screenshot1.png)
-![Screenshot 2](/screenshots/screenshot2.png)
-![Screenshot 3](/screenshots/screenshot3.png)
+![Screenshot 1](/screenshots/Screenshot1.png)
+![Screenshot 2](/screenshots/Screenshot2.png)
+![Screenshot 3](/screenshots/Screenshot3.png)
 
 ## 🛠️ Prerequisites
 Before running the app, make sure you have the following installed:
