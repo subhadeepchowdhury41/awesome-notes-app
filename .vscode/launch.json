@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "app-debug",
       "request": "launch",
@@ -11,13 +12,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "demo_frontend (profile mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "demo_frontend (release mode)",
+      "name": "app-release",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
