@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-# flutter build apk --release
+flutter build apk --release
 
 # Assign directory name from command line argument
 dir="$1"
