@@ -13,7 +13,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   await HiveBoxes.registerAdapters();
   await HiveBoxes.openBoxes();
-  
+
   runApp(const ProviderScope(child: NotesApp()));
 }
 
@@ -27,7 +27,7 @@ class NotesApp extends ConsumerStatefulWidget {
 class _NotesAppState extends ConsumerState<NotesApp> {
   final AppRouterParser _routerParser = AppRouterParser();
   _appInit() async {
-    await Future.delayed(const Duration(seconds: 4), () async {
+    await Future.delayed(const Duration(milliseconds: 1000), () async {
       await ref.read(authProvider.notifier).init();
       await ref.read(notesProvider.notifier).init();
     });

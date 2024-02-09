@@ -66,7 +66,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: Column(
                           children: [
                             Text(
-                              user!.name!,
+                              user.name!,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w400),
                             ),
