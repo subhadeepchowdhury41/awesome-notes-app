@@ -1,6 +1,6 @@
 {
-    "name": "demo_frontend",
-    "short_name": "demo_frontend",
+    "name": "Awesome Notes",
+    "short_name": "awesome notes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
